@@ -1,0 +1,8 @@
+# directories
+.vscode/
+node_modules/
+lib/
+
+# files
+.DS_Store
+yarn-error.log
