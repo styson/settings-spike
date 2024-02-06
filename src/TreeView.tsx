@@ -1,39 +1,41 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { TreeNode } from './MockApi';
 import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 
-export declare type TreeViewProps = {
-  nodes: TreeNode[];
+export declare type TreeViewProps<T> = {
+  nodes: TreeNode<T>[];
+  onItemClick?: (node: TreeNode<T>) => void;
 };
 
-export declare type TreeNodeProps = {
+export declare type TreeNodeProps<T> = {
   indent?: number;
-  node: TreeNode;
-  parent?: TreeNode;
+  node: TreeNode<T>;
+  onClick?: (node: TreeNode<T>) => void;
+  parent?: TreeNode<T>;
 };
 
-export const TreeNodeItem: React.FC<TreeNodeProps> = ({ indent = 2, node, parent }) => {
-  const [open, setOpen] = useState(false);
+export function TreeNodeItem<T>(props: TreeNodeProps<T>) {
+ const { indent = 2, node, onClick, parent } = props;
+ const [open, setOpen] = useState(false);
 
-    const handleItemClick = (node: TreeNode) => {
-      console.dir(`clicked setting with value '${node.value}`);
-    };
-
-    const handleClick = () => {
-      setOpen(!open);
-    };
+ const handleClick = useCallback(() => {
+   setOpen(!open);
+  if (onClick) {
+    onClick(node);
+  }
+  
+}, [node, open, setOpen, onClick]);
 
   if (!node.children?.length) {
     return (
-      <ListItemButton id={node.id} sx={parent ? { pl: indent } : {}}>
+      <ListItemButton sx={parent ? { pl: indent } : {}} onClick={handleClick}>
         <ListItemIcon>
           <TextSnippetIcon />
         </ListItemIcon>
         <ListItemText
-          onClick={() => handleItemClick(node)}
           primary={node.name}
           secondary={node.value}
         />
@@ -52,21 +54,22 @@ export const TreeNodeItem: React.FC<TreeNodeProps> = ({ indent = 2, node, parent
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
         {node.children.map((child) => (
-          <TreeNodeItem node={child} parent={node} indent={indent * 1.6} />
+          <TreeNodeItem key={child.id} node={child} parent={node} indent={indent + 1} onClick={onClick} />
         ))}
       </Collapse>
     </>
   );
-};
+}
 
-export const TreeView: React.FC<TreeViewProps> = ({ nodes }) => {
+export function TreeView<T>(props: TreeViewProps<T>) {
+  const { nodes, onItemClick } = props;
   return (
     <>
       {nodes.map((node) => (
-        <List disablePadding dense>
-          <TreeNodeItem node={node} />
+        <List key={node.id} disablePadding>
+          <TreeNodeItem node={node} onClick={onItemClick} />
         </List>
       ))}
     </>
   );
-};
+}
