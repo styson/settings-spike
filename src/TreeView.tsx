@@ -18,16 +18,15 @@ export declare type TreeNodeProps<T> = {
 };
 
 export function TreeNodeItem<T>(props: TreeNodeProps<T>) {
- const { indent = 2, node, onClick, parent } = props;
- const [open, setOpen] = useState(false);
+  const { indent = 2, node, onClick, parent } = props;
+  const [open, setOpen] = useState(false);
 
- const handleClick = useCallback(() => {
-   setOpen(!open);
-  if (onClick) {
-    onClick(node);
-  }
-  
-}, [node, open, setOpen, onClick]);
+  const handleClick = useCallback(() => {
+    setOpen(!open);
+    if (onClick) {
+      onClick(node);
+    }
+  }, [node, open, setOpen, onClick]);
 
   if (!node.children?.length) {
     return (
@@ -35,10 +34,7 @@ export function TreeNodeItem<T>(props: TreeNodeProps<T>) {
         <ListItemIcon>
           <TextSnippetIcon />
         </ListItemIcon>
-        <ListItemText
-          primary={node.name}
-          secondary={node.value}
-        />
+        <ListItemText primary={node.name} secondary={node.value} />
       </ListItemButton>
     );
   }
@@ -54,7 +50,13 @@ export function TreeNodeItem<T>(props: TreeNodeProps<T>) {
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
         {node.children.map((child) => (
-          <TreeNodeItem key={child.id} node={child} parent={node} indent={indent + 1} onClick={onClick} />
+          <TreeNodeItem
+            key={child.id}
+            node={child}
+            parent={node}
+            indent={indent + 1}
+            onClick={onClick}
+          />
         ))}
       </Collapse>
     </>
