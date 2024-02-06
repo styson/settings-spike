@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from 'react';
-import { TreeNode } from './MockApi';
-import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { useCallback, useState } from 'react';
+import { TreeNode } from './MockApi';
 
 export declare type TreeViewProps<T> = {
   nodes: TreeNode<T>[];
